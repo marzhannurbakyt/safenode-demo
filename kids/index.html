@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SafeNode Kids — SOS-кнопка для ребёнка</title>
+<meta name="description" content="Небольшая носимая SOS-кнопка: ребёнок удерживает её 2 секунды, не доставая телефон, и вы получаете сигнал и геолокацию.">
+<meta name="theme-color" content="#F5F7FA">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SafeNode Kids — две секунды, чтобы попросить помощи">
+<meta property="og:description" content="Носимая SOS-кнопка для ребёнка: сигнал и геолокация родителю без поиска телефона.">
+<meta property="og:image" content="https://marzhannurbakyt.github.io/safenode-demo/kids/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://marzhannurbakyt.github.io/safenode-demo/kids/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231E2B4D'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23E06A55'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Onest:wght@400;500;600;700&display=swap">
+<style>
+html,body{margin:0}
+
+/* Макет: короткий мобильный лендинг в одной светлой гамме (под светлые фото): фото + тезис → 3 ситуации с фото → схема и мини-демо → цена и WhatsApp → короткие вопросы */
+:root{
+  color-scheme:light;
+  --bg:#F5F7FA; --surface:#FFFFFF; --ink:#17213A; --muted:#55607A; --line:#E1E6EE;
+  --navy:#1E2B4D; --coral:#E06A55; --coral-soft:#FBE8E3; --sky:#E7EEF9;
+  --ok:#1F7A50; --ok-soft:#E1F2E8; --warn:#8A5A06; --warn-soft:#FBF0D9; --wa:#1E8A4C;
+  --f-display:"Unbounded","Onest",system-ui,sans-serif;
+  --f-ui:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:inherit}
+img{display:block;width:100%;height:auto}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+section{padding-block:40px}
+h1,h2{font-family:var(--f-display);font-weight:700;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,7.4vw,52px);line-height:1.08}
+h2{font-size:clamp(23px,5.6vw,32px);line-height:1.15}
+h3{font-size:18px;margin:0;font-weight:600;line-height:1.3}
+p{margin:0}
+.lead{font-size:18px;color:var(--ink);max-width:36ch}
+.muted{color:var(--muted)}
+.small{font-size:15px;color:var(--muted)}
+.head{display:grid;gap:8px;margin-bottom:22px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coral)}
+
+/* кнопки */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;font:600 17px var(--f-ui);border-radius:14px;padding:12px 26px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:#fff}
+.btn.sm{min-height:44px;font-size:15px;padding:8px 16px}
+.btn svg{width:22px;height:22px;flex:none}
+.btn:focus-visible,.sosb:focus-visible,summary:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.cta .small{font-size:15px}
+
+/* шапка: только логотип */
+.top .wrap{display:flex;align-items:center;gap:8px;padding-block:14px}
+.logo{font-family:var(--f-display);font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.logo i{width:11px;height:11px;border-radius:50%;background:var(--coral)}
+
+/* первый экран */
+.hero{padding-block:8px 36px}
+.hero .wrap{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
+@media (max-width:820px){.hero .wrap{grid-template-columns:1fr;gap:22px}}
+.hero-text{display:grid;gap:16px;min-width:0}
+.hero-photo{border-radius:22px;overflow:hidden;aspect-ratio:3/2;max-width:100%;background:var(--sky);position:relative}
+.viz{position:absolute;right:10px;top:10px;background:rgba(255,255,255,.92);color:var(--ink);font-size:12.5px;font-weight:600;border-radius:999px;padding:4px 10px}
+.hero-photo img{height:100%;object-fit:cover}
+@media (max-width:820px){.hero-photo{order:-1}}
+
+/* ситуации */
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:820px){.cases{grid-template-columns:1fr;gap:20px}}
+.case{background:var(--surface);border-radius:20px;overflow:hidden;display:grid;align-content:start;min-width:0;box-shadow:0 1px 0 var(--line)}
+.case .ph{aspect-ratio:3/2;max-width:100%;background:var(--sky);position:relative}
+.case .ph img{height:100%;object-fit:cover}
+.case .chip{position:absolute;left:12px;bottom:12px;background:var(--surface);color:var(--ink);font-size:13px;font-weight:600;border-radius:999px;padding:4px 10px}
+.case .tx{padding:16px 18px 20px;display:grid;gap:6px}
+.case p{font-size:16px;color:var(--muted)}
+
+/* схема */
+.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;list-style:none;margin:0;padding:0;counter-reset:s}
+@media (max-width:820px){.flow{grid-template-columns:1fr;gap:10px}}
+.flow li{counter-increment:s;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;background:var(--surface);border-radius:16px;padding:16px;min-width:0}
+.flow li::before{content:counter(s);width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font:700 15px var(--f-display)}
+.flow p{font-size:16px;color:var(--muted);margin-top:2px}
+
+.important{margin-top:16px;background:var(--warn-soft);border-radius:16px;padding:16px 18px;display:grid;gap:6px}
+.important b{color:var(--warn)}
+.important p{font-size:16px}
+
+/* мини-демо */
+.demo{margin-top:22px;background:var(--surface);border-radius:22px;padding:18px;display:grid;gap:14px}
+.demo-note{font-size:14px;color:var(--muted);background:var(--sky);border-radius:10px;padding:8px 12px;justify-self:start}
+.demo-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:stretch}
+@media (max-width:640px){.demo-grid{grid-template-columns:1fr}}
+.fob{background:var(--navy);color:#fff;border-radius:18px;padding:22px 16px;display:grid;justify-items:center;gap:12px}
+.fob.buzz{animation:buzz .08s linear 5}
+@keyframes buzz{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@media (prefers-reduced-motion:reduce){.fob.buzz{animation:none;outline:3px solid var(--ok)}}
+.sosb{position:relative;width:112px;height:112px;border-radius:50%;border:0;background:var(--coral);color:#fff;font:700 18px var(--f-display);cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;box-shadow:0 0 0 8px rgba(224,106,85,.25)}
+.sosb svg{position:absolute;inset:-9px;width:130px;height:130px;transform:rotate(-90deg);pointer-events:none}
+.sosb circle{fill:none;stroke:#fff;stroke-width:5;stroke-dasharray:390;stroke-dashoffset:390}
+.fob .st{font-size:15px;text-align:center;min-height:24px;max-width:26ch}
+.phone{border:1px solid var(--line);border-radius:18px;padding:14px;display:grid;gap:10px;align-content:start;min-height:140px}
+.phone .who{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.idle{color:var(--muted);font-size:15px}
+.alert{border-radius:14px;background:var(--coral-soft);border:1px solid var(--coral);padding:12px;display:grid;gap:8px}
+.alert h3{font-size:17px}
+.map{height:86px;border-radius:10px;position:relative;background:
+  linear-gradient(90deg,transparent 46%,#D3DBE8 46%,#D3DBE8 54%,transparent 54%),
+  linear-gradient(0deg,transparent 40%,#D3DBE8 40%,#D3DBE8 47%,transparent 47%),#EEF2F8}
+.map::after{content:"";position:absolute;left:52%;top:34%;width:14px;height:14px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 6px rgba(224,106,85,.25)}
+.kv{font-size:14px;color:var(--muted)} .kv b{color:var(--ink)}
+
+
+/* цена */
+.price{background:var(--navy);color:#fff;border-radius:24px;padding:26px 20px;display:grid;gap:16px;justify-items:start}
+.price .big{font-family:var(--f-display);font-size:clamp(34px,9vw,48px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.price .usd{font-size:18px;opacity:.8;margin-top:6px}
+.price p{max-width:46ch;opacity:.9;font-size:16px}
+.price .cta .small{color:#fff;opacity:.85}
+.num{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:15px;opacity:.95}
+.num code{font-family:var(--f-ui);font-weight:600;font-size:16px;user-select:all;font-variant-numeric:tabular-nums}
+.num .btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.okmsg{font-size:14px;min-height:18px;opacity:.9}
+
+/* вопросы */
+details{background:var(--surface);border-radius:14px;padding:16px 18px}
+details+details{margin-top:10px}
+summary{cursor:pointer;font-weight:600;min-height:24px}
+details p{margin-top:8px;color:var(--muted);font-size:16px}
+
+.foot{padding-block:24px 28px;font-size:14px;color:var(--muted);display:grid;gap:4px}
+
+/* закреплённая кнопка снизу: видна, только когда основная и финальная кнопки не на экране */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));transform:translateY(110%);transition:transform .2s}
+.dock.on{transform:none}
+@media (prefers-reduced-motion:reduce){.dock{transition:none}}
+.dock .in{max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dock .t{font-size:15px;color:var(--muted)}
+@media (max-width:520px){.dock .t{display:none}.dock .btn{width:100%}}
+.spacer{height:84px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><span class="logo"><i></i>SafeNode Kids</span></div></header>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-text">
+      <h1>Две секунды, чтобы попросить помощи</h1>
+      <p class="lead">SafeNode — небольшая носимая SOS-кнопка. В момент тревоги или опасности ребёнок удерживает её 2 секунды, не доставая телефон, и вы получаете сигнал и геолокацию.</p>
+      <div class="cta">
+        <a class="btn wa js-wa" data-place="1" id="cta-main" href="https://wa.me/77478448841" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3Z"/></svg>
+          Забронировать
+        </a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <picture>
+        <source type="image/avif" srcset="img/pendant-800.avif 800w, img/pendant-1280.avif 1280w" sizes="(max-width:820px) 100vw, 520px">
+        <source type="image/webp" srcset="img/pendant-800.webp 800w, img/pendant-1280.webp 1280w" sizes="(max-width:820px) 100vw, 520px">
+        <img src="img/pendant-800.webp" width="1280" height="853" fetchpriority="high" alt="Девочка в голубом свитере держит пальцами тёмно-синий кулон SafeNode с кораллово-красной кнопкой на цепочке">
+      </picture>
+      <span class="viz">Визуализация устройства</span>
+    </div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Когда пригодится</span>
+      <h2>Когда телефон не достать</h2>
+      <p class="small">Фото — визуализация, как можно носить устройство.</p>
+    </div>
+    <div class="cases">
+      <article class="case">
+        <div class="ph">
+          <picture>
+            <source type="image/avif" srcset="img/backpack-480.avif 480w, img/backpack-800.avif 800w" sizes="(max-width:820px) 100vw, 330px">
+            <source type="image/webp" srcset="img/backpack-480.webp 480w, img/backpack-800.webp 800w" sizes="(max-width:820px) 100vw, 330px">
+            <img src="img/backpack-480.webp" width="800" height="533" loading="lazy" decoding="async" alt="Школьница у школы нажимает SOS-кнопку, пристёгнутую карабином к лямке рюкзака">
+          </picture>
+          <span class="chip">на рюкзаке</span>
+        </div>
+        <div class="tx"><h3>При всех страшно достать телефон</h3><p>Его заметят или отберут. Кнопку можно удержать незаметно.</p></div>
+      </article>
+      <article class="case">
+        <div class="ph">
+          <picture>
+            <source type="image/avif" srcset="img/jacket-480.avif 480w, img/jacket-800.avif 800w" sizes="(max-width:820px) 100vw, 330px">
+            <source type="image/webp" srcset="img/jacket-480.webp 480w, img/jacket-800.webp 800w" sizes="(max-width:820px) 100vw, 330px">
+            <img src="img/jacket-480.webp" width="800" height="533" loading="lazy" decoding="async" alt="Ребёнок в бежевой куртке нажимает SOS-кнопку, закреплённую карабином у нагрудного кармана">
+          </picture>
+          <span class="chip">на куртке</span>
+        </div>
+        <div class="tx"><h3>Кто-то идёт следом</h3><p>Ребёнок нажимает кнопку и идёт к людям. Вы уже знаете, где он.</p></div>
+      </article>
+      <article class="case">
+        <div class="ph">
+          <picture>
+            <source type="image/avif" srcset="img/bracelet-480.avif 480w, img/bracelet-800.avif 800w" sizes="(max-width:820px) 100vw, 330px">
+            <source type="image/webp" srcset="img/bracelet-480.webp 480w, img/bracelet-800.webp 800w" sizes="(max-width:820px) 100vw, 330px">
+            <img src="img/bracelet-480.webp" width="800" height="533" loading="lazy" decoding="async" alt="Запястье ребёнка с плетёным браслетом и подвеской SafeNode с SOS-кнопкой">
+          </picture>
+          <span class="chip">на браслете</span>
+        </div>
+        <div class="tx"><h3>Потерялся в незнакомом месте</h3><p>Объяснять ничего не нужно — вы видите точку на карте и перезваниваете.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Как работает</span>
+      <h2>От кнопки до вашего телефона</h2>
+    </div>
+    <ol class="flow">
+      <li><div><h3>Удержать 2 секунды</h3><p>Короткое случайное нажатие не считается.</p></div></li>
+      <li><div><h3>Смартфон ребёнка передаёт SOS</h3><p>Кнопка связана с ним по Bluetooth. Телефон может лежать в рюкзаке.</p></div></li>
+      <li><div><h3>Вы получаете сигнал и геолокацию</h3><p>Кнопка один раз вибрирует — ребёнок знает, что сигнал передан.</p></div></li>
+    </ol>
+    <div class="important">
+      <b>Важно</b>
+      <p>Кнопка работает только вместе со смартфоном ребёнка: он должен быть рядом, заряжен и с интернетом. SafeNode передаёт запрос о помощи близким. Он не вызывает 102 и 112 и не гарантирует, что помощь придёт.</p>
+    </div>
+
+    <div class="demo" id="demo">
+      <span class="demo-note">Демонстрация работы кнопки</span>
+      <div class="demo-grid">
+        <div class="fob" id="fob">
+          <button class="sosb" id="sosb" type="button" aria-describedby="st">SOS<svg viewBox="0 0 130 130" aria-hidden="true"><circle id="ring" cx="65" cy="65" r="62"/></svg></button>
+          <div class="st" id="st" aria-live="polite">Нажмите и держите 2 секунды</div>
+        </div>
+        <div class="phone">
+          <span class="who">Телефон родителя</span>
+          <div id="parent" aria-live="polite"><p class="idle">Здесь появится сигнал.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="price">
+  <div class="wrap">
+    <div class="price">
+      <div>
+        <div class="big">24 990 ₸</div>
+        <div class="usd">≈ $56 · предварительная цена</div>
+      </div>
+      <div class="cta">
+        <a class="btn wa js-wa" data-place="2" id="cta-final" href="https://wa.me/77478448841" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3Z"/></svg>
+          Забронировать
+        </a>
+      </div>
+      <div class="num"><span>WhatsApp:</span><code id="numtext">+7 747 844 8841</code><button class="btn sm" id="copynum" type="button">Скопировать номер</button></div>
+      <div class="okmsg" id="okmsg" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="head"><span class="eyebrow">Вопросы</span><h2>Коротко о главном</h2></div>
+    <details><summary>Когда можно получить устройство?</summary><p>Сроки уточняем. Сообщим лично каждой семье, записавшейся в пилот.</p></details>
+    <details><summary>Сколько держит батарея?</summary><p>Проверяем на тестах. Назовём цифру после проверки.</p></details>
+    <details><summary>Подойдёт ли iPhone?</summary><p>Первая версия — для Android-смартфона ребёнка. Работу с iPhone проверим позже.</p></details>
+    <details><summary>Что если у ребёнка нет телефона?</summary><p>Тогда эта версия не подойдёт: кнопка передаёт сигнал через смартфон ребёнка.</p></details>
+  </div>
+</section>
+
+<footer class="wrap foot">
+  <span><b>SafeNode Kids</b> · Алматы · 2026</span>
+  <span>Устройство в разработке. Не является средством экстренной помощи и не заменяет 102 и 112. Цена предварительная.</span>
+</footer>
+<div class="spacer" aria-hidden="true"></div>
+
+<div class="dock" id="dock" aria-hidden="true">
+  <div class="in">
+    <span class="t">SafeNode Kids · 24 990 ₸</span>
+    <a class="btn wa js-wa" data-place="3" href="https://wa.me/77478448841" target="_blank" rel="noopener" tabindex="-1">Забронировать</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+
+  // ---------- WhatsApp: номер, текст и метка источника ----------
+  // Источник берётся из ссылки в рекламе: адрес страницы + #ig, #tt, #chat (только буквы).
+  // Место нажатия: 1 — первый экран, 2 — блок цены, 3 — закреплённая кнопка.
+  // Метка вида (IG1) попадает в конец сообщения: так видно, откуда пришло обращение. Личных данных в ней нет.
+  var WA = "77478448841";
+  var MSG = "Здравствуйте! Интересует SafeNode Kids. Хочу забронировать.";
+  var src = (location.hash || "").replace("#","").replace(/[^a-z]/gi,"").slice(0,8).toUpperCase() || "WEB";
+  document.querySelectorAll(".js-wa").forEach(function(a){
+    var tag = " (" + src + a.dataset.place + ")";
+    a.href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(MSG + tag);
+  });
+
+  $("copynum").addEventListener("click", function(){
+    var el = $("numtext");
+    function sel(){ var r=document.createRange(); r.selectNodeContents(el); var s=getSelection(); s.removeAllRanges(); s.addRange(r); $("okmsg").textContent="Номер выделен — скопируйте вручную"; }
+    try { navigator.clipboard.writeText("+77478448841").then(function(){ $("okmsg").textContent="Номер скопирован"; }, sel); } catch(e){ sel(); }
+  });
+
+  // ---------- Закреплённая кнопка: прячем, пока видна основная или финальная ----------
+  var dock = $("dock"), seen = {};
+  function setDock(){
+    var show = !seen.main && !seen.final;
+    dock.classList.toggle("on", show);
+    dock.setAttribute("aria-hidden", String(!show));
+    dock.querySelector("a").tabIndex = show ? 0 : -1;
+  }
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ seen[e.target.id === "cta-main" ? "main" : "final"] = e.isIntersecting; });
+      setDock();
+    });
+    io.observe($("cta-main")); io.observe($("cta-final"));
+  }
+
+  // ---------- Мини-демо: одно действие — удержать SOS ----------
+  var sosb=$("sosb"), ring=$("ring"), fob=$("fob"), st=$("st"), parent=$("parent");
+  var hold=null, raf=0, t0=0, busy=false;
+  function down(e){
+    if (busy) return; e.preventDefault(); t0=performance.now();
+    var tick=function(now){ var p=Math.min(1,(now-t0)/2000); ring.style.strokeDashoffset=String(390*(1-p)); if(p<1) raf=requestAnimationFrame(tick); };
+    raf=requestAnimationFrame(tick); st.textContent="Держите…";
+    hold=setTimeout(function(){ hold=null; ring.style.strokeDashoffset="390"; send(); }, 2000);
+  }
+  function up(){
+    cancelAnimationFrame(raf); ring.style.strokeDashoffset="390";
+    if (hold){ clearTimeout(hold); hold=null; if(!busy) st.textContent="Коротко — не считается. Держите 2 секунды"; }
+  }
+  function send(){
+    busy=true; st.textContent="Передаём сигнал…";
+    setTimeout(function(){
+      fob.classList.remove("buzz"); void fob.offsetWidth; fob.classList.add("buzz");
+      try{ navigator.vibrate && navigator.vibrate(150); }catch(e){}
+      st.textContent="Одна вибрация — сигнал передан";
+      var time=new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+      parent.innerHTML='<div class="alert"><h3>SOS от Айи</h3>'+
+        '<div class="kv">Нажала кнопку в <b>'+time+'</b> (пример)</div>'+
+        '<div class="map" role="img" aria-label="Пример карты с точкой на перекрёстке"></div>'+
+        '<div class="kv">ост. «Абая — Розыбакиева», Алматы (пример)</div></div>';
+      setTimeout(function(){ busy=false; st.textContent="Можно попробовать ещё раз"; }, 1500);
+    }, 1200);
+  }
+  sosb.addEventListener("pointerdown", down);
+  ["pointerup","pointerleave","pointercancel"].forEach(function(ev){ sosb.addEventListener(ev, up); });
+  sosb.addEventListener("keydown", function(e){ if((e.key===" "||e.key==="Enter") && !e.repeat && !hold) down(e); });
+  sosb.addEventListener("keyup", function(e){ if(e.key===" "||e.key==="Enter") up(); });
+  sosb.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+})();
+</script>
+</body>
+</html>
